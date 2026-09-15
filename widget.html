@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>점심모야 위젯</title>
+</head>
+<body style="margin:0;padding:24px;background:#EDEFF2;">
+<div style="max-width:380px;margin:0 auto;">
+
+<!-- ======================= 여기부터 복사 ======================= -->
+<style>
+.jsm-widget {
+  --jsm-ink:    #3E2F23;
+  --jsm-body:   #6B5647;
+  --jsm-sub:    #A98C71;
+  --jsm-line:   #EADCCB;
+  --jsm-dot:    #E3CDB4;
+  --jsm-accent: #E8833A;
+  --jsm-deep:   #C2571B;
+  --jsm-soft:   #FFF1E6;
+  --jsm-tab:    #F0E2CE;
+
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 260px;
+  border: 1px solid #F0E4D4;
+  border-radius: 20px;
+  background: #FFFCF7;
+  box-shadow: 0 2px 14px rgba(120, 80, 40, .07);
+  color: var(--jsm-ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", "맑은 고딕", sans-serif;
+  font-size: 15.5px;
+  line-height: 1.55;
+  text-align: left;
+  overflow: hidden;
+}
+.jsm-widget div, .jsm-widget span, .jsm-widget button, .jsm-widget p { box-sizing: border-box; }
+.jsm-widget button { margin: 0; border: 0; background: none; font: inherit; color: inherit; cursor: pointer; }
+
+/* ── 날짜 헤더 ── */
+.jsm-widget .jsm-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  padding: 16px 18px 12px;
+}
+.jsm-widget .jsm-nav {
+  flex: 0 0 auto;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--jsm-tab);
+  color: #B08968;
+  font-size: 12px;
+  line-height: 30px;
+  text-align: center;
+  transition: background .15s, color .15s;
+}
+.jsm-widget .jsm-nav:hover:not(:disabled) { background: var(--jsm-soft); color: var(--jsm-deep); }
+.jsm-widget .jsm-nav:disabled { opacity: .3; cursor: default; }
+.jsm-widget .jsm-date {
+  flex: 1 1 auto;
+  text-align: center;
+  font-size: 17.5px;
+  font-weight: 800;
+  letter-spacing: -.3px;
+  white-space: nowrap;
+}
+.jsm-widget .jsm-badge {
+  display: inline-block;
+  margin-left: 7px;
+  padding: 1px 8px;
+  border-radius: 20px;
+  background: var(--jsm-accent);
+  color: #FFFFFF;
+  font-size: 11.5px;
+  font-weight: 800;
+  vertical-align: 2px;
+}
+
+/* ── 안내 줄 (데이터 없을 때만) ── */
+.jsm-widget .jsm-notice {
+  margin: 0 14px 8px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: #FFF6E0;
+  color: #9A6B00;
+  font-size: 13.5px;
+  font-weight: 700;
+  text-align: center;
+  word-break: keep-all;
+}
+
+/* ── 상단 탭 ── */
+.jsm-widget .jsm-tabs { display: flex; gap: 7px; padding: 0 16px 2px; }
+.jsm-widget .jsm-tab {
+  flex: 1 1 0;
+  padding: 11px 0;
+  border-radius: 13px;
+  background: var(--jsm-tab);
+  color: var(--jsm-sub);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -.3px;
+  text-align: center;
+  white-space: nowrap;
+  transition: all .15s;
+}
+.jsm-widget .jsm-tab:hover:not(.is-on) { color: var(--jsm-deep); }
+.jsm-widget .jsm-tab.is-on {
+  background: var(--jsm-accent);
+  color: #FFFFFF;
+  box-shadow: 0 3px 9px rgba(232, 131, 58, .32);
+}
+
+/* ── 중식 A/B 토글 ── */
+.jsm-widget .jsm-ab { display: flex; justify-content: center; gap: 7px; padding: 13px 0 2px; }
+.jsm-widget .jsm-ab-btn {
+  min-width: 60px;
+  padding: 4px 14px;
+  border: 1.5px solid var(--jsm-line);
+  border-radius: 20px;
+  color: #B08968;
+  font-size: 13px;
+  font-weight: 800;
+  transition: all .15s;
+}
+.jsm-widget .jsm-ab-btn:hover:not(.is-on) { border-color: var(--jsm-accent); color: var(--jsm-deep); }
+.jsm-widget .jsm-ab-btn.is-on { border-color: var(--jsm-accent); background: var(--jsm-soft); color: var(--jsm-deep); }
+
+/* ── 메뉴 본문 ── */
+.jsm-widget .jsm-body { padding: 15px 20px 20px; }
+.jsm-widget .jsm-main {
+  padding: 11px 15px;
+  border-radius: 13px;
+  background: var(--jsm-soft);
+  color: var(--jsm-deep);
+  font-size: 19px;
+  font-weight: 800;
+  letter-spacing: -.4px;
+  word-break: keep-all;
+}
+.jsm-widget .jsm-side {
+  position: relative;
+  padding: 4px 0 4px 17px;
+  color: var(--jsm-body);
+  word-break: keep-all;
+}
+.jsm-widget .jsm-side::before {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 13px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--jsm-dot);
+}
+.jsm-widget .jsm-side:first-of-type { margin-top: 11px; }
+.jsm-widget .jsm-drink {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--jsm-line);
+  color: var(--jsm-sub);
+  font-size: 14px;
+  font-weight: 600;
+}
+.jsm-widget .jsm-msg { margin: 0; padding: 46px 10px; color: var(--jsm-sub); font-size: 14.5px; text-align: center; }
+</style>
+
+<div class="jsm-widget" id="jsmWidget">
+  <div class="jsm-head">
+    <button class="jsm-nav" id="jsmPrev" type="button" aria-label="이전 날짜">◀</button>
+    <div class="jsm-date" id="jsmDate">&nbsp;</div>
+    <button class="jsm-nav" id="jsmNext" type="button" aria-label="다음 날짜">▶</button>
+  </div>
+  <div class="jsm-notice" id="jsmNotice" style="display:none;"></div>
+  <div class="jsm-tabs" id="jsmTabs">
+    <button class="jsm-tab" type="button" data-meal="breakfast">🍳 조식</button>
+    <button class="jsm-tab" type="button" data-meal="lunch">🍱 중식</button>
+    <button class="jsm-tab" type="button" data-meal="dinner">🌙 석식</button>
+  </div>
+  <div class="jsm-ab" id="jsmAb" style="display:none;">
+    <button class="jsm-ab-btn" type="button" data-ab="A">중식 A</button>
+    <button class="jsm-ab-btn" type="button" data-ab="B">중식 B</button>
+  </div>
+  <div class="jsm-body" id="jsmBody">
+    <p class="jsm-msg">식단을 불러오는 중…</p>
+  </div>
+</div>
+
+<script>
+(function () {
+  /* ───────── 설정 ───────── */
+  var MENU_URL      = "https://axplanningteam.github.io/jumsimmoya/menu.json";
+  var BREAKFAST_END = 9 * 60 + 30;   // 09:30 까지 조식
+  var DINNER_START  = 17 * 60;       // 17:00 부터 석식
+  /* ──────────────────────── */
+
+  var root = document.getElementById("jsmWidget");
+  if (!root) return;
+  var elDate   = document.getElementById("jsmDate");
+  var elBody   = document.getElementById("jsmBody");
+  var elAb     = document.getElementById("jsmAb");
+  var elPrev   = document.getElementById("jsmPrev");
+  var elNext   = document.getElementById("jsmNext");
+  var elNotice = document.getElementById("jsmNotice");
+
+  var DAYS = {};     // 날짜 -> 식단
+  var KEYS = [];     // 정렬된 날짜 목록
+  var idx  = 0;      // 현재 보고 있는 날짜의 위치
+  var meal = "lunch";
+  var ab   = "A";
+  var todayKey = "";
+  var stale = false; // 오늘 이후 식단이 아직 등록되지 않은 상태
+
+  /* 보는 사람 PC 시계가 어느 나라든 항상 한국 시간으로 계산 */
+  function kstNow() {
+    var n = new Date();
+    return new Date(n.getTime() + n.getTimezoneOffset() * 60000 + 9 * 3600000);
+  }
+  function ymd(d) {
+    return d.getFullYear() + "-" +
+           ("0" + (d.getMonth() + 1)).slice(-2) + "-" +
+           ("0" + d.getDate()).slice(-2);
+  }
+  function esc(s) {
+    var d = document.createElement("div");
+    d.textContent = s == null ? "" : String(s);
+    return d.innerHTML;
+  }
+  function msg(text) {
+    elBody.innerHTML = '<p class="jsm-msg">' + esc(text) + "</p>";
+  }
+
+  /* 오늘 날짜 — 토/일이면 다음 주 월요일로 */
+  function startDate() {
+    var d = kstNow();
+    var w = d.getDay();                       // 0=일 … 6=토
+    if (w === 6) d.setDate(d.getDate() + 2);
+    else if (w === 0) d.setDate(d.getDate() + 1);
+    return d;
+  }
+
+  /* 지금 시각에 맞는 끼니 */
+  function mealNow() {
+    var d = kstNow();
+    var w = d.getDay();
+    if (w === 0 || w === 6) return "lunch";   // 주말엔 중식부터
+    var m = d.getHours() * 60 + d.getMinutes();
+    if (m < BREAKFAST_END) return "breakfast";
+    if (m < DINNER_START)  return "lunch";
+    return "dinner";
+  }
+
+  function paintTabs() {
+    var tabs = root.querySelectorAll(".jsm-tab");
+    for (var i = 0; i < tabs.length; i++) {
+      tabs[i].className = (tabs[i].getAttribute("data-meal") === meal) ? "jsm-tab is-on" : "jsm-tab";
+    }
+    elAb.style.display = (meal === "lunch") ? "flex" : "none";
+    var abs = root.querySelectorAll(".jsm-ab-btn");
+    for (var j = 0; j < abs.length; j++) {
+      abs[j].className = (abs[j].getAttribute("data-ab") === ab) ? "jsm-ab-btn is-on" : "jsm-ab-btn";
+    }
+  }
+
+  function paintDate() {
+    var key = KEYS[idx];
+    var d   = new Date(key + "T00:00:00");
+    var txt = (d.getMonth() + 1) + "월 " + d.getDate() + "일 (" + (DAYS[key].dow || "") + ")";
+
+    var diff = Math.round((d - new Date(todayKey + "T00:00:00")) / 86400000);
+    var tag  = diff === 0 ? "오늘" : (diff === 1 ? "내일" : "");
+    elDate.innerHTML = esc(txt) + (tag ? '<span class="jsm-badge">' + tag + "</span>" : "");
+
+    elPrev.disabled = (idx <= 0);
+    elNext.disabled = (idx >= KEYS.length - 1);
+  }
+
+  function paintBody() {
+    var day = DAYS[KEYS[idx]];
+    var src = meal === "breakfast" ? day.breakfast
+            : meal === "dinner"    ? day.dinner
+            : (ab === "B" ? day.lunchB : day.lunchA);
+
+    if (!src || !src.main) { msg("등록된 메뉴가 없습니다."); return; }
+
+    var html = '<div class="jsm-main">' + esc(src.main) + "</div>";
+    var sides = src.sides || [];
+    for (var i = 0; i < sides.length; i++) {
+      html += '<div class="jsm-side">' + esc(sides[i]) + "</div>";
+    }
+    if (meal === "lunch" && day.drink) {
+      html += '<div class="jsm-drink">☕ ' + esc(day.drink) + "</div>";
+    }
+    elBody.innerHTML = html;
+  }
+
+  function paint() { paintTabs(); paintDate(); paintBody(); }
+
+  /* ── 클릭 처리 ── */
+  document.getElementById("jsmTabs").addEventListener("click", function (e) {
+    var b = e.target.closest ? e.target.closest(".jsm-tab") : null;
+    if (!b || !KEYS.length) return;
+    meal = b.getAttribute("data-meal");
+    paint();
+  });
+  elAb.addEventListener("click", function (e) {
+    var b = e.target.closest ? e.target.closest(".jsm-ab-btn") : null;
+    if (!b || !KEYS.length) return;
+    ab = b.getAttribute("data-ab");
+    paint();
+  });
+  elPrev.addEventListener("click", function () { if (idx > 0) { idx--; paint(); } });
+  elNext.addEventListener("click", function () { if (idx < KEYS.length - 1) { idx++; paint(); } });
+
+  /* ── 데이터 로드 ── */
+  fetch(MENU_URL, { cache: "no-store" })
+    .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then(function (data) {
+      DAYS = (data && data.days) || {};
+      KEYS = Object.keys(DAYS).sort();
+      if (!KEYS.length) { msg("등록된 식단이 없습니다."); return; }
+
+      todayKey = ymd(kstNow());
+      var want = ymd(startDate());
+
+      idx = -1;
+      for (var i = 0; i < KEYS.length; i++) {
+        if (KEYS[i] >= want) { idx = i; break; }
+      }
+      if (idx === -1) {                       // 볼 수 있는 앞날 식단이 없음
+        idx = KEYS.length - 1;
+        stale = true;
+        elNotice.textContent = "새 주간 식단이 아직 등록되지 않았어요";
+        elNotice.style.display = "block";
+      }
+
+      meal = mealNow();
+      paint();
+    })
+    .catch(function () {
+      msg("식단 정보를 불러오지 못했습니다.");
+    });
+})();
+</script>
+<!-- ======================= 여기까지 복사 ======================= -->
+
+</div>
+</body>
+</html>
