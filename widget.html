@@ -118,7 +118,7 @@
 /* ── 중식 A/B 토글 ── */
 .jsm-widget .jsm-ab { display: flex; justify-content: center; gap: 7px; padding: 10px 0 2px; }
 .jsm-widget .jsm-ab-btn {
-  min-width: 60px;
+  min-width: 52px;
   padding: 3px 12px;
   border: 1.5px solid var(--jsm-line);
   border-radius: 12px;
@@ -185,6 +185,7 @@
   <div class="jsm-ab" id="jsmAb" style="display:none;">
     <button class="jsm-ab-btn" type="button" data-ab="A">중식 A</button>
     <button class="jsm-ab-btn" type="button" data-ab="B">중식 B</button>
+    <button class="jsm-ab-btn" type="button" data-ab="T">🥡 Take Out</button>
   </div>
   <div class="jsm-body" id="jsmBody">
     <p class="jsm-msg">식단을 불러오는 중…</p>
@@ -282,6 +283,17 @@
 
   function paintBody() {
     var day = DAYS[KEYS[idx]];
+
+    if (meal === "lunch" && ab === "T") {
+      var items = day.takeout || [];
+      if (!items.length) { msg("등록된 메뉴가 없습니다."); return; }
+      var th = "";
+      for (var t = 0; t < items.length; t++) {
+        th += '<div class="jsm-side">' + esc(items[t]) + "</div>";
+      }
+      elBody.innerHTML = th;
+      return;
+    }
     var src = meal === "breakfast" ? day.breakfast
             : meal === "dinner"    ? day.dinner
             : (ab === "B" ? day.lunchB : day.lunchA);
